@@ -29,8 +29,9 @@ with open(classes_file, "r") as f:
 # 웹캠으로부터 입력 받기 위해 VideoCapture 객체 생성
 cap = cv2.VideoCapture(0)
 # 웹캠 프레임 사이즈 설정
-# cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-# cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
 # frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 # frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
