@@ -1,0 +1,9 @@
+classes= 1
+train  = /home/B190101/datasets/passenger/train.txt
+valid  = /home/B190101/datasets/passenger/val.txt
+test = /home/B190101/datasets/passenger/test.txt
+names = /home/B190101/datasets/passenger/passenger.names
+backup = /home/B190101/darknet/backup
+#eval=coco
+
+
