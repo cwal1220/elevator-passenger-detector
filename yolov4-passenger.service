@@ -1,0 +1,13 @@
+[Unit]
+Description=Yolov4 Passenger Detection Service
+After=multi-user.target
+
+[Service]
+Environment="DISPLAY=:0.0"
+User=pi
+WorkingDirectory=/home/pi/elevator-passenger-detector
+ExecStart=/usr/bin/python3 yolov4-passenger-video.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
