@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 # import DeviceManager
 
+MAX_PASSENGER_NUM = 9
+
+
 # YOLOv4 모델과 가중치 파일 경로
 model_path = "yolov4-passenger-tiny_last.weights"
 config_path = "yolov4-passenger-tiny.cfg"
@@ -17,12 +20,8 @@ net = cv2.dnn.readNet(model_path, config_path)
 # net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
 # net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 
-# 클래스 이름 파일 경로
-classes_file = "passenger.names"
-
-# 클래스 이름 로드
-with open(classes_file, "r") as f:
-    classes = [line.strip() for line in f.readlines()]
+# 클래스 이름
+classes = ["passenger"]
 
 # 이미지 파일 경로
 
@@ -89,18 +88,12 @@ while True:
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.2, 0.5)
 
     passengerAreaClor = (0, 0, 255)
-    if len(indexes) >= 1:
-        # DeviceManager.fanStart()
-        print(indexes)
-        for i in indexes.flatten():
-            x, y, w, h = boxes[i]
-            color = (0, 255, 128)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            text = f"{classes[class_ids[i]]}: {confidences[i]:.2f}"
-            cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-    else:
-        # DeviceManager.fanStop()
-        pass
+    for i in indexes.flatten():
+        x, y, w, h = boxes[i]
+        color = (0, 255, 128)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+        text = f"{classes[class_ids[i]]}: {confidences[i]:.2f}"
+        cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     # 결과 이미지 출력
     frame = cv2.resize(frame, (800, 480))
