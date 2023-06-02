@@ -36,7 +36,7 @@ cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 # frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 cv2.namedWindow("YOLOv4-passenger", cv2.WINDOW_NORMAL)
-# cv2.setWindowProperty("YOLOv4-passenger", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+cv2.setWindowProperty("YOLOv4-passenger", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 
 while True:
@@ -87,19 +87,29 @@ while True:
     # NMS(Normalized Maximum Suppression) 적용
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.2, 0.5)
 
+    frame = cv2.resize(frame, (480, 320))
+    x_scale = 480.0/224.0
+    y_scale = 320.0/224.0
+
+
     if len(indexes) > 0:
         passengerAreaClor = (0, 0, 255)
         for i in indexes.flatten():
             x, y, w, h = boxes[i]
+            x = int(x*x_scale)
+            y = int(y*y_scale)
+            w = int(w*x_scale)
+            h = int(h*y_scale)
+
             color = (0, 255, 128)
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             text = f"{classes[class_ids[i]]}: {confidences[i]:.2f}"
             cv2.putText(frame, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    cv2.putText(frame, "passenger: {}/{}".format(len(indexes), MAX_PASSENGER_NUM), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
-
     # 결과 이미지 출력
     frame = cv2.resize(frame, (480, 320))
+    cv2.putText(frame, "passenger", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+    cv2.putText(frame, "{}/{} ({})".format(len(indexes), MAX_PASSENGER_NUM, MAX_PASSENGER_NUM-len(indexes)), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
     cv2.imshow("YOLOv4-passenger", frame)
     if cv2.waitKey(1) == ord("q"):
         break
